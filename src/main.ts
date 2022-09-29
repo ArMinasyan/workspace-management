@@ -44,6 +44,7 @@ async function bootstrap() {
     .setTitle('Workspace management')
     .setDescription('')
     .setVersion('1.0.0')
+    .addBearerAuth()
     .addTag('wpm')
     .build();
   const document = SwaggerModule.createDocument(app, config);

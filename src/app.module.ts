@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
@@ -9,14 +9,16 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 import { UsersEntity } from './modules/auth/entities/users.entity';
 import { WorkspaceEntity } from './modules/workspaces/entities/workspace.entity';
-
-const rootDir = process.env.NODE_ENV === 'prod' ? 'dist' : 'src';
-console.log(join(rootDir, 'modules', '/**/*.entity.{js,ts}'));
+import { ChannelEntity } from './modules/workspace-channels/entities/channel.entity';
+import AuthMiddleware from './common/middlewares/auth.middleware';
+import { JwtModule } from '@nestjs/jwt';
+import { ChannelModule } from './modules/workspace-channels/channel.module';
 
 @Module({
   imports: [
     AuthModule,
     WorkspacesModule,
+    ChannelModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -29,15 +31,33 @@ console.log(join(rootDir, 'modules', '/**/*.entity.{js,ts}'));
         type: 'postgres',
         synchronize: true,
         logging: true,
-        entities: [UsersEntity, WorkspaceEntity],
+        entities: [UsersEntity, WorkspaceEntity, ChannelEntity],
       }),
     }),
     ConfigModule.forRoot({
       load: [configuration],
       isGlobal: true,
     }),
+    JwtModule.register({
+      signOptions: {
+        algorithm: 'HS256',
+      },
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer): any {
+    consumer
+      .apply(AuthMiddleware)
+      .forRoutes(
+        { path: '/workspaces', method: RequestMethod.POST },
+        { path: '/workspaces/*', method: RequestMethod.PUT },
+        { path: '/workspaces/*', method: RequestMethod.PATCH },
+        { path: '/workspaces/*/channels', method: RequestMethod.POST },
+        { path: '/workspaces/*/channels/*', method: RequestMethod.PUT },
+        { path: '/workspaces/*/channels/*', method: RequestMethod.PATCH },
+      );
+  }
+}

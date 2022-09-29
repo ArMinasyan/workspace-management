@@ -14,9 +14,6 @@ import { UsersEntity } from './entities/users.entity';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         secret: configService.get('jwt_secret'),
-        signOptions: {
-          algorithm: 'HS256',
-        },
       }),
     }),
     TypeOrmModule.forFeature([UsersEntity]),

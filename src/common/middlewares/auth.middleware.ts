@@ -6,21 +6,25 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { NextFunction, Request, Response } from 'express';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export default class AuthMiddleware implements NestMiddleware {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
+  ) {}
 
   use(req: Request, res: Response, next: NextFunction) {
     const token =
-      (req?.headers?.authorization?.includes('Bearer') &&
+      (req?.headers?.authorization?.startsWith('Bearer') &&
         req?.headers?.authorization?.split(' ')[1]) ||
       null;
 
     if (token) {
       try {
         req['user'] = this.jwtService.verify(token, {
-          secret: process.env.JWT_SECRET,
+          secret: this.configService.get('jwt_secret'),
         });
         next();
       } catch (err) {

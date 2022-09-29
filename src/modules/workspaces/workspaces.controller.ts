@@ -10,8 +10,10 @@ import {
 import { WorkspacesService } from './workspaces.service';
 import { CreateWorkspaceDto } from './dto/create-workspace.dto';
 import { UpdateWorkspaceDto } from './dto/update-workspace.dto';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
+import { User } from '../../common/customDecorators/user.decorator';
 
+@ApiBearerAuth()
 @Controller('workspaces')
 export class WorkspacesController {
   constructor(private readonly workspacesService: WorkspacesService) {}
@@ -20,8 +22,8 @@ export class WorkspacesController {
     tags: ['Workspaces'],
   })
   @Post()
-  create(@Body() payload: CreateWorkspaceDto) {
-    return this.workspacesService.create(payload);
+  create(@Body() payload: CreateWorkspaceDto, @User() user) {
+    return this.workspacesService.create(user.id, payload);
   }
 
   @ApiOperation({
