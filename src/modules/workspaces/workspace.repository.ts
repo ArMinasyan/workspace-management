@@ -24,10 +24,11 @@ export class WorkspaceRepository extends Repository<WorkspaceEntity> {
     });
   }
 
-  async createWorkspace(name: string, subDomain: string) {
+  async createWorkspace(name: string, subDomain: string, userId: number) {
     return await this.save({
       name,
       sub_domain: subDomain,
+      user_id: userId,
     });
   }
 }

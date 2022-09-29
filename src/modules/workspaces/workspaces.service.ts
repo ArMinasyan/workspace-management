@@ -17,7 +17,7 @@ export class WorkspacesService {
     return !workspace?.id;
   }
 
-  async create(payload: CreateWorkspaceDto) {
+  async create(userId: number, payload: CreateWorkspaceDto) {
     const isWorkspaceDomainUnique = await this.isSubDomainUnique(
       payload.subDomain,
     );
@@ -32,6 +32,7 @@ export class WorkspacesService {
     const createdWorkspace = await this.workspaceRepository.createWorkspace(
       payload.name,
       payload.subDomain,
+      userId,
     );
 
     return responseMessage({

@@ -20,7 +20,7 @@ export class AuthService {
     const user = await this.authRepository.findUserByEmail(payload.email);
     if (user?.id && bcrypt.compareSync(payload.password, user.password)) {
       const token = await this.jwtService.signAsync({
-        user_id: user.id,
+        id: user.id,
       });
 
       return responseMessage({
@@ -53,7 +53,7 @@ export class AuthService {
     });
 
     const token = await this.jwtService.signAsync({
-      user_id: createdUser.id,
+      id: createdUser.id,
     });
 
     return responseMessage({
