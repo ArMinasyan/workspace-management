@@ -7,7 +7,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration from './configuration';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
-import { AuthEntity } from './modules/auth/entities/auth.entity';
+import { UsersEntity } from './modules/auth/entities/users.entity';
+import { WorkspaceEntity } from './modules/workspaces/entities/workspace.entity';
 
 const rootDir = process.env.NODE_ENV === 'prod' ? 'dist' : 'src';
 console.log(join(rootDir, 'modules', '/**/*.entity.{js,ts}'));
@@ -28,7 +29,7 @@ console.log(join(rootDir, 'modules', '/**/*.entity.{js,ts}'));
         type: 'postgres',
         synchronize: true,
         logging: true,
-        entities: [AuthEntity],
+        entities: [UsersEntity, WorkspaceEntity],
       }),
     }),
     ConfigModule.forRoot({

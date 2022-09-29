@@ -1,11 +1,11 @@
 import { DataSource, Repository } from 'typeorm';
-import { AuthEntity } from './entities/auth.entity';
+import { UsersEntity } from './entities/users.entity';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class AuthRepository extends Repository<AuthEntity> {
+export class AuthRepository extends Repository<UsersEntity> {
   constructor(private dataSource: DataSource) {
-    super(AuthEntity, dataSource.createEntityManager());
+    super(UsersEntity, dataSource.createEntityManager());
   }
 
   findUserByEmail(email: string) {
