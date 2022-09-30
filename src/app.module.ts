@@ -1,18 +1,16 @@
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AuthModule } from './modules/auth/auth.module';
-import { WorkspacesModule } from './modules/workspaces/workspaces.module';
+import { AuthModule } from './modules/Auth/auth.module';
+import { WorkspacesModule } from './modules/Workspaces/workspaces.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration from './configuration';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { join } from 'path';
-import { UsersEntity } from './modules/auth/entities/users.entity';
-import { WorkspaceEntity } from './modules/workspaces/entities/workspace.entity';
-import { ChannelEntity } from './modules/workspace-channels/entities/channel.entity';
+import { UsersEntity } from './modules/Auth/entities/users.entity';
+import { WorkspaceEntity } from './modules/Workspaces/entities/workspace.entity';
+import { ChannelEntity } from './modules/WorkspaceChannels/entities/channel.entity';
 import AuthMiddleware from './common/middlewares/auth.middleware';
 import { JwtModule } from '@nestjs/jwt';
-import { ChannelModule } from './modules/workspace-channels/channel.module';
+import { ChannelModule } from './modules/WorkspaceChannels/channel.module';
 
 @Module({
   imports: [
@@ -23,14 +21,14 @@ import { ChannelModule } from './modules/workspace-channels/channel.module';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        host: configService.get('database.host'),
-        port: configService.get('database.port'),
-        username: configService.get('database.username'),
-        password: configService.get('database.password'),
-        database: configService.get('database.db'),
+        host: configService.get<string>('database.host'),
+        port: configService.get<number>('database.port'),
+        username: configService.get<string>('database.username'),
+        password: configService.get<string>('database.password'),
+        database: configService.get<string>('database.db'),
         type: 'postgres',
-        synchronize: true,
-        logging: true,
+        synchronize: configService.get<boolean>('database.sync'),
+        logging: configService.get<boolean>('database.logging'),
         entities: [UsersEntity, WorkspaceEntity, ChannelEntity],
       }),
     }),
@@ -44,7 +42,6 @@ import { ChannelModule } from './modules/workspace-channels/channel.module';
       },
     }),
   ],
-  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {
@@ -52,12 +49,12 @@ export class AppModule {
     consumer
       .apply(AuthMiddleware)
       .forRoutes(
-        { path: '/workspaces', method: RequestMethod.POST },
-        { path: '/workspaces/*', method: RequestMethod.PUT },
-        { path: '/workspaces/*', method: RequestMethod.PATCH },
-        { path: '/workspaces/*/channels', method: RequestMethod.POST },
-        { path: '/workspaces/*/channels/*', method: RequestMethod.PUT },
-        { path: '/workspaces/*/channels/*', method: RequestMethod.PATCH },
+        { path: '/Workspaces', method: RequestMethod.POST },
+        { path: '/Workspaces/*', method: RequestMethod.PUT },
+        { path: '/Workspaces/*', method: RequestMethod.PATCH },
+        { path: '/Workspaces/*/channels', method: RequestMethod.POST },
+        { path: '/Workspaces/*/channels/*', method: RequestMethod.PUT },
+        { path: '/Workspaces/*/channels/*', method: RequestMethod.PATCH },
       );
   }
 }

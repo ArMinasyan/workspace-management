@@ -10,4 +10,10 @@ export class SignUpDto {
   @ApiProperty()
   @IsString()
   password: string;
+
+  @ApiProperty({
+    type: 'file',
+    name: 'image',
+  })
+  image: any;
 }

@@ -1,6 +1,6 @@
 import * as dotenv from 'dotenv';
 dotenv.config({
-  path: `env/${process.env.NODE_ENV || 'prod'}.env`,
+  path: `env/.env.${process.env.NODE_ENV || 'prod'}`,
 });
 
 import { HttpExceptionFilter } from './common/exceptionFilters/http-exception.filter';
@@ -50,7 +50,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(3000);
+  await app.listen(80);
 }
 
 bootstrap();

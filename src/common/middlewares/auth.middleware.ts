@@ -25,7 +25,7 @@ export default class AuthMiddleware implements NestMiddleware {
     if (token) {
       try {
         req['user'] = this.jwtService.verify(token, {
-          secret: this.configService.get('jwt_secret'),
+          secret: this.configService.get<string>('jwt_secret'),
         });
         next();
       } catch (err) {

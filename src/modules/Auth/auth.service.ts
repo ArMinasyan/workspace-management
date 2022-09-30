@@ -7,6 +7,7 @@ import { IResponse } from '../../common/helpers/IResponse';
 import { InjectRepository } from '@nestjs/typeorm';
 import responseMessage from '../../common/helpers/response-message';
 import { SignUpDto } from './dto/sign-up.dto';
+import { FileUploadService } from '../FileUpload/file-upload.service';
 
 @Injectable()
 export class AuthService {
@@ -14,6 +15,7 @@ export class AuthService {
     @InjectRepository(AuthRepository)
     private readonly authRepository: AuthRepository,
     private readonly jwtService: JwtService,
+    private readonly fileService: FileUploadService,
   ) {}
 
   async signIn(payload: SignInDto): Promise<IResponse> {
@@ -37,8 +39,12 @@ export class AuthService {
     }
   }
 
-  async signUp(payload: SignUpDto): Promise<IResponse> {
+  async signUp(
+    payload: SignUpDto,
+    file: { contentType: string; buffer: Buffer },
+  ): Promise<IResponse> {
     const user = await this.authRepository.findUserByEmail(payload.email);
+    let uploadedFile;
     if (user?.id) {
       return responseMessage({
         statusCode: HttpStatus.CONFLICT,
@@ -46,10 +52,17 @@ export class AuthService {
       });
     }
 
+    if (file?.contentType) {
+      uploadedFile = await this.fileService.upload({
+        buffer: file.buffer,
+        contentType: file.contentType,
+      });
+    }
     const passwordHash = bcrypt.hashSync(payload.password, 12);
     const createdUser = await this.authRepository.save({
       email: payload.email,
       password: passwordHash,
+      ...(uploadedFile?.url ? { profile_image: uploadedFile.url } : {}),
     });
 
     const token = await this.jwtService.signAsync({

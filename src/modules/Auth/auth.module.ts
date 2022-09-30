@@ -6,6 +6,7 @@ import { AuthRepository } from './auth.repository';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersEntity } from './entities/users.entity';
+import { FileUploadModule } from '../FileUpload/file-upload.module';
 
 @Module({
   imports: [
@@ -13,10 +14,13 @@ import { UsersEntity } from './entities/users.entity';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        secret: configService.get('jwt_secret'),
+        secret: configService.get<string>('jwt_secret'),
       }),
     }),
     TypeOrmModule.forFeature([UsersEntity]),
+    FileUploadModule.register({
+      folder: 'profile-images',
+    }),
   ],
   controllers: [AuthController],
   providers: [AuthService, AuthRepository],
