@@ -1,8 +1,4 @@
 import * as dotenv from 'dotenv';
-dotenv.config({
-  path: `env/.env.${process.env.NODE_ENV || 'prod'}`,
-});
-
 import { HttpExceptionFilter } from './common/exceptionFilters/http-exception.filter';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
@@ -13,6 +9,10 @@ import {
   ValidationError,
   ValidationPipe,
 } from '@nestjs/common';
+
+dotenv.config({
+  path: `env/.env.${process.env.NODE_ENV || 'prod'}`,
+});
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -45,12 +45,11 @@ async function bootstrap() {
     .setDescription('')
     .setVersion('1.0.0')
     .addBearerAuth()
-    .addTag('wpm')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('api-documentation', app, document);
 
-  await app.listen(80);
+  await app.listen(3000);
 }
 
 bootstrap();
