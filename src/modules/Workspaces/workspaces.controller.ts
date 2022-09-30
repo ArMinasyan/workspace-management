@@ -12,9 +12,10 @@ import { CreateWorkspaceDto } from './dto/create-workspace.dto';
 import { UpdateWorkspaceDto } from './dto/update-workspace.dto';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { User } from '../../common/customDecorators/user.decorator';
+import { JoinToWorkspaceDto } from './dto/join-to-workspace.dto';
 
 @ApiBearerAuth()
-@Controller('Workspaces')
+@Controller('workspaces')
 export class WorkspacesController {
   constructor(private readonly workspacesService: WorkspacesService) {}
 
@@ -40,6 +41,25 @@ export class WorkspacesController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.workspacesService.findOne(+id);
+  }
+
+  @ApiOperation({
+    tags: ['Workspaces'],
+  })
+  @Get(':id/participants')
+  findAllParticipants(@Param('id') id: number) {
+    return this.workspacesService.getAllParticipants(id);
+  }
+
+  @ApiOperation({
+    tags: ['Workspaces'],
+  })
+  @Post('join')
+  joinToWorkspace(@Body() payload: JoinToWorkspaceDto, @User() user: any) {
+    return this.workspacesService.joinToWorkspace({
+      ...payload,
+      userId: user.id,
+    });
   }
 
   @ApiOperation({

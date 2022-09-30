@@ -6,7 +6,7 @@ export default () => ({
     username: process.env.DATABASE_USERNAME || 'postgres',
     password: process.env.DATABSE_PASSWORD || 'postgres',
     db: process.env.DATABASE_DB,
-    sync: false,
+    sync: true,
     logging: true,
   },
   jwt_secret: process.env.JWT_SECRET,

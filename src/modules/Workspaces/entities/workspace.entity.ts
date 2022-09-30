@@ -1,9 +1,10 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { ChannelEntity } from '../../WorkspaceChannels/entities/channel.entity';
 import { BaseEntity } from '../../../common/helpers/baseEntity';
+import { ParticipantEntity } from './participant.entity';
 
 @Entity({
-  name: 'Workspaces',
+  name: 'workspaces',
 })
 export class WorkspaceEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -15,9 +16,9 @@ export class WorkspaceEntity extends BaseEntity {
   @Column()
   sub_domain: string;
 
-  @Column()
-  user_id: number;
-
   @OneToMany(() => ChannelEntity, (channel) => channel.workspace)
   channels: ChannelEntity[];
+
+  @OneToMany(() => ParticipantEntity, (participant) => participant.workspace)
+  participants: ParticipantEntity[];
 }

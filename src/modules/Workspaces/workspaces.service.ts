@@ -5,12 +5,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { WorkspaceRepository } from './workspace.repository';
 import responseMessage from '../../common/helpers/response-message';
 import { IResponse } from '../../common/helpers/IResponse';
+import { ParticipantRepository } from './participant.repository';
 
 @Injectable()
 export class WorkspacesService {
   constructor(
     @InjectRepository(WorkspaceRepository)
     private readonly workspaceRepository: WorkspaceRepository,
+    @InjectRepository(ParticipantRepository)
+    private readonly participantRepository: ParticipantRepository,
   ) {}
 
   async isSubDomainUnique(subDomain: string): Promise<boolean> {
@@ -110,6 +113,32 @@ export class WorkspacesService {
 
     return responseMessage({
       message: `Workspace with id=${id} deleted`,
+    });
+  }
+
+  async joinToWorkspace(payload) {
+    const participant = await this.participantRepository.joinToWorkspace(
+      payload.workspaceId,
+      payload.userId,
+    );
+
+    return responseMessage({
+      message: `Join to workspace success`,
+      statusCode: HttpStatus.CREATED,
+      data: participant,
+    });
+  }
+
+  async getAllParticipants(workspaceId: number) {
+    const participants = await this.participantRepository
+      .createQueryBuilder('p')
+      .select('u.id, u.email, u.profile_image')
+      .innerJoin('users', 'u', 'u.id = p.user')
+      .where('p.workspace = :workspaceId', { workspaceId })
+      .getRawMany();
+
+    return responseMessage({
+      data: participants,
     });
   }
 }

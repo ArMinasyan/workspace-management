@@ -11,6 +11,7 @@ import { ChannelEntity } from './modules/WorkspaceChannels/entities/channel.enti
 import AuthMiddleware from './common/middlewares/auth.middleware';
 import { JwtModule } from '@nestjs/jwt';
 import { ChannelModule } from './modules/WorkspaceChannels/channel.module';
+import { ParticipantEntity } from './modules/Workspaces/entities/participant.entity';
 
 @Module({
   imports: [
@@ -29,7 +30,12 @@ import { ChannelModule } from './modules/WorkspaceChannels/channel.module';
         type: 'postgres',
         synchronize: configService.get<boolean>('database.sync'),
         logging: configService.get<boolean>('database.logging'),
-        entities: [UsersEntity, WorkspaceEntity, ChannelEntity],
+        entities: [
+          UsersEntity,
+          WorkspaceEntity,
+          ChannelEntity,
+          ParticipantEntity,
+        ],
       }),
     }),
     ConfigModule.forRoot({
@@ -49,12 +55,13 @@ export class AppModule {
     consumer
       .apply(AuthMiddleware)
       .forRoutes(
-        { path: '/Workspaces', method: RequestMethod.POST },
-        { path: '/Workspaces/*', method: RequestMethod.PUT },
-        { path: '/Workspaces/*', method: RequestMethod.PATCH },
-        { path: '/Workspaces/*/channels', method: RequestMethod.POST },
-        { path: '/Workspaces/*/channels/*', method: RequestMethod.PUT },
-        { path: '/Workspaces/*/channels/*', method: RequestMethod.PATCH },
+        { path: '/workspaces', method: RequestMethod.POST },
+        { path: '/workspaces/join', method: RequestMethod.POST },
+        { path: '/workspaces/*', method: RequestMethod.PUT },
+        { path: '/workspaces/*', method: RequestMethod.PATCH },
+        { path: '/workspaces/*/channels', method: RequestMethod.POST },
+        { path: '/workspaces/*/channels/*', method: RequestMethod.PUT },
+        { path: '/workspaces/*/channels/*', method: RequestMethod.PATCH },
       );
   }
 }
