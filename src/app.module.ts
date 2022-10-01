@@ -57,6 +57,7 @@ export class AppModule {
       .forRoutes(
         { path: '/workspaces', method: RequestMethod.POST },
         { path: '/workspaces/join', method: RequestMethod.POST },
+        { path: '/workspaces/invite', method: RequestMethod.POST },
         { path: '/workspaces/*', method: RequestMethod.PUT },
         { path: '/workspaces/*', method: RequestMethod.PATCH },
         { path: '/workspaces/*/channels', method: RequestMethod.POST },

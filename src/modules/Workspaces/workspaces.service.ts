@@ -129,6 +129,20 @@ export class WorkspacesService {
     });
   }
 
+  async inviteToWorkspace(payload) {
+    const participant = await this.participantRepository.inviteToWorkspace(
+      payload.workspaceId,
+      payload.userId,
+      payload.inviterId,
+    );
+
+    return responseMessage({
+      message: `User is invited`,
+      statusCode: HttpStatus.CREATED,
+      data: participant,
+    });
+  }
+
   async getAllParticipants(workspaceId: number) {
     const participants = await this.participantRepository
       .createQueryBuilder('p')

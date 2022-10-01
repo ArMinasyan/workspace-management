@@ -8,10 +8,25 @@ export class ParticipantRepository extends Repository<ParticipantEntity> {
     super(ParticipantEntity, dataSource.createEntityManager());
   }
 
-  joinToWorkspace(workspaceId: number, userId: number) {
+  joinToWorkspace(
+    workspaceId: number,
+    userId: number,
+  ): Promise<ParticipantEntity> {
     return this.save({
       workspace: workspaceId,
       user: userId,
+    });
+  }
+
+  inviteToWorkspace(
+    workspaceId: number,
+    userId: number,
+    inviterId: number,
+  ): Promise<ParticipantEntity> {
+    return this.save({
+      workspace: workspaceId,
+      user: userId,
+      inviter_id: inviterId,
     });
   }
 }

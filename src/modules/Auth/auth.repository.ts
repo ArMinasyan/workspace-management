@@ -8,7 +8,7 @@ export class AuthRepository extends Repository<UsersEntity> {
     super(UsersEntity, dataSource.createEntityManager());
   }
 
-  findUserByEmail(email: string) {
+  findUserByEmail(email: string): Promise<UsersEntity> {
     return this.findOne({
       where: {
         email,

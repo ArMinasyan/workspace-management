@@ -13,6 +13,7 @@ import { UpdateWorkspaceDto } from './dto/update-workspace.dto';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { User } from '../../common/customDecorators/user.decorator';
 import { JoinToWorkspaceDto } from './dto/join-to-workspace.dto';
+import { InviteToWorkspaceDto } from './dto/invite-to-workspace.dto';
 
 @ApiBearerAuth()
 @Controller('workspaces')
@@ -59,6 +60,17 @@ export class WorkspacesController {
     return this.workspacesService.joinToWorkspace({
       ...payload,
       userId: user.id,
+    });
+  }
+
+  @ApiOperation({
+    tags: ['Workspaces'],
+  })
+  @Post('invite')
+  inviteToWorkspace(@Body() payload: InviteToWorkspaceDto, @User() user: any) {
+    return this.workspacesService.inviteToWorkspace({
+      ...payload,
+      inviterId: user.id,
     });
   }
 
