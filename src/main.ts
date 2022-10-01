@@ -44,7 +44,7 @@ async function bootstrap() {
     .setTitle('Workspace management')
     .setDescription('')
     .setVersion('1.0.0')
-    .addBearerAuth()
+    .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' })
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api-documentation', app, document);

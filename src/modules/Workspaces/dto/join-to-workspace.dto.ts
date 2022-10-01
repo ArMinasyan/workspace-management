@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber } from 'class-validator';
+import { IsNumberString } from 'class-validator';
 
 export class JoinToWorkspaceDto {
   @ApiProperty()
-  @IsNumber()
+  @IsNumberString()
   workspaceId: number;
 }

@@ -1,7 +1,7 @@
 export interface IResponse {
   statusCode: number;
   success: boolean;
-  data: any;
+  data: { [key: string]: any } | [{ [key: string]: any }];
   message: string;
   validationError: any;
 }

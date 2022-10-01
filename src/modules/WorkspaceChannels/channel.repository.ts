@@ -8,7 +8,7 @@ export class ChannelRepository extends Repository<ChannelEntity> {
     super(ChannelEntity, dataSource.createEntityManager());
   }
 
-  findById(id: number) {
+  findById(id: number): Promise<ChannelEntity> {
     return this.findOne({
       where: {
         id,
@@ -17,7 +17,11 @@ export class ChannelRepository extends Repository<ChannelEntity> {
     });
   }
 
-  async createChannel(workspaceId: number, userId: number, { name }) {
+  async createChannel(
+    workspaceId: number,
+    userId: number,
+    { name },
+  ): Promise<ChannelEntity> {
     return await this.save({
       workspace: workspaceId,
       name,

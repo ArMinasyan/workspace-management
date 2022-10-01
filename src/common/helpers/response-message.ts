@@ -10,7 +10,7 @@ export default ({
   return {
     statusCode: statusCode,
     success: success,
-    data: data,
+    data: data || {},
     message: message,
     validationError: validationError,
   };

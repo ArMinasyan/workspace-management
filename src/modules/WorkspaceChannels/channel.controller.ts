@@ -11,7 +11,7 @@ import {
 import { ChannelService } from './channel.service';
 import { CreateChannelDto } from './dto/create-channel.dto';
 import { UpdateWorkspaceDto } from './dto/update-workspace.dto';
-import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiOperation } from '@nestjs/swagger';
 import { User } from '../../common/customDecorators/user.decorator';
 
 @ApiBearerAuth()
@@ -22,6 +22,7 @@ export class ChannelController {
   @ApiOperation({
     tags: ['Channels'],
   })
+  @ApiConsumes('application/x-www-form-urlencoded')
   @Post('channels')
   create(
     @Param('workspaceId') workspaceId: number,
@@ -50,6 +51,7 @@ export class ChannelController {
   @ApiOperation({
     tags: ['Channels'],
   })
+  @ApiConsumes('application/x-www-form-urlencoded')
   @Put(':id')
   update(@Param('id') id: string, @Body() payload: UpdateWorkspaceDto) {
     return this.channelService.update(+id, payload);

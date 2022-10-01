@@ -10,7 +10,7 @@ import {
 import { WorkspacesService } from './workspaces.service';
 import { CreateWorkspaceDto } from './dto/create-workspace.dto';
 import { UpdateWorkspaceDto } from './dto/update-workspace.dto';
-import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiOperation } from '@nestjs/swagger';
 import { User } from '../../common/customDecorators/user.decorator';
 import { JoinToWorkspaceDto } from './dto/join-to-workspace.dto';
 import { InviteToWorkspaceDto } from './dto/invite-to-workspace.dto';
@@ -23,6 +23,7 @@ export class WorkspacesController {
   @ApiOperation({
     tags: ['Workspaces'],
   })
+  @ApiConsumes('application/x-www-form-urlencoded')
   @Post()
   create(@Body() payload: CreateWorkspaceDto, @User() user) {
     return this.workspacesService.create(user.id, payload);
@@ -55,6 +56,7 @@ export class WorkspacesController {
   @ApiOperation({
     tags: ['Workspaces'],
   })
+  @ApiConsumes('application/x-www-form-urlencoded')
   @Post('join')
   joinToWorkspace(@Body() payload: JoinToWorkspaceDto, @User() user: any) {
     return this.workspacesService.joinToWorkspace({
@@ -66,6 +68,7 @@ export class WorkspacesController {
   @ApiOperation({
     tags: ['Workspaces'],
   })
+  @ApiConsumes('application/x-www-form-urlencoded')
   @Post('invite')
   inviteToWorkspace(@Body() payload: InviteToWorkspaceDto, @User() user: any) {
     return this.workspacesService.inviteToWorkspace({
@@ -77,6 +80,7 @@ export class WorkspacesController {
   @ApiOperation({
     tags: ['Workspaces'],
   })
+  @ApiConsumes('application/x-www-form-urlencoded')
   @Put(':id')
   update(@Param('id') id: string, @Body() payload: UpdateWorkspaceDto) {
     return this.workspacesService.update(+id, payload);

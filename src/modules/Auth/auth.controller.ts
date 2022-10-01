@@ -19,6 +19,7 @@ export class AuthController {
   @ApiOperation({
     tags: ['Auth'],
   })
+  @ApiConsumes('application/x-www-form-urlencoded')
   @Post('sign-in')
   signIn(@Body() payload: SignInDto) {
     return this.authService.signIn(payload);
