@@ -15,7 +15,7 @@ import { ApiBearerAuth, ApiConsumes, ApiOperation } from '@nestjs/swagger';
 import { User } from '../../common/customDecorators/user.decorator';
 
 @ApiBearerAuth()
-@Controller('Workspaces/:workspaceId')
+@Controller('workspaces/:workspaceId')
 export class ChannelController {
   constructor(private readonly channelService: ChannelService) {}
 

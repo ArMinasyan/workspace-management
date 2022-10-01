@@ -42,7 +42,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Workspace management')
-    .setDescription('')
+    .setDescription('Workspace management system')
     .setVersion('1.0.0')
     .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' })
     .build();

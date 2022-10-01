@@ -21,7 +21,6 @@ export default class AuthMiddleware implements NestMiddleware {
         req?.headers?.authorization?.split(' ')[1]) ||
       null;
 
-    console.log(token);
     if (token) {
       try {
         req['user'] = this.jwtService.verify(token, {
