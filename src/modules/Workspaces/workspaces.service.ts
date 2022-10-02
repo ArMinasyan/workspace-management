@@ -6,6 +6,8 @@ import { WorkspaceRepository } from './workspace.repository';
 import responseMessage from '../../common/helpers/response-message';
 import { IResponse } from '../../common/helpers/IResponse';
 import { ParticipantRepository } from './participant.repository';
+import { GetWorkspacesDto } from './dto/get-workspaces.dto';
+import { GetParticipantsDto } from './dto/get-participants.dto';
 
 @Injectable()
 export class WorkspacesService {
@@ -52,8 +54,13 @@ export class WorkspacesService {
     });
   }
 
-  async findAll(): Promise<IResponse> {
-    const workspaces = await this.workspaceRepository.find();
+  async findAll(query: GetWorkspacesDto): Promise<IResponse> {
+    const workspaces = await this.workspaceRepository.find({
+      take: query.limit,
+      skip: query.offset,
+    });
+
+    console.log(workspaces);
     return responseMessage({
       data: workspaces,
     });
@@ -143,12 +150,14 @@ export class WorkspacesService {
     });
   }
 
-  async getAllParticipants(workspaceId: number) {
+  async getAllParticipants(workspaceId: number, query: GetParticipantsDto) {
     const participants = await this.participantRepository
       .createQueryBuilder('p')
       .select('u.id, u.email, u.profile_image')
       .innerJoin('users', 'u', 'u.id = p.user')
       .where('p.workspace = :workspaceId', { workspaceId })
+      .offset(query.offset)
+      .limit(query.limit)
       .getRawMany();
 
     return responseMessage({

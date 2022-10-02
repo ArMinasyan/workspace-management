@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { WorkspacesService } from './workspaces.service';
 import { CreateWorkspaceDto } from './dto/create-workspace.dto';
@@ -14,6 +15,8 @@ import { ApiBearerAuth, ApiConsumes, ApiOperation } from '@nestjs/swagger';
 import { User } from '../../common/customDecorators/user.decorator';
 import { JoinToWorkspaceDto } from './dto/join-to-workspace.dto';
 import { InviteToWorkspaceDto } from './dto/invite-to-workspace.dto';
+import { GetWorkspacesDto } from './dto/get-workspaces.dto';
+import { GetParticipantsDto } from './dto/get-participants.dto';
 
 @ApiBearerAuth()
 @Controller('workspaces')
@@ -33,8 +36,8 @@ export class WorkspacesController {
     tags: ['Workspaces'],
   })
   @Get()
-  findAll() {
-    return this.workspacesService.findAll();
+  findAll(@Query() query: GetWorkspacesDto) {
+    return this.workspacesService.findAll(query);
   }
 
   @ApiOperation({
@@ -49,8 +52,11 @@ export class WorkspacesController {
     tags: ['Workspaces'],
   })
   @Get(':id/participants')
-  findAllParticipants(@Param('id') id: number) {
-    return this.workspacesService.getAllParticipants(id);
+  findAllParticipants(
+    @Query() query: GetParticipantsDto,
+    @Param('id') id: number,
+  ) {
+    return this.workspacesService.getAllParticipants(id, query);
   }
 
   @ApiOperation({

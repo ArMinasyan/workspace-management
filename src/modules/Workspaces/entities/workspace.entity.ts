@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { ChannelEntity } from '../../WorkspaceChannels/entities/channel.entity';
+import { ChannelEntity } from '../../Channels/entities/channel.entity';
 import { BaseEntity } from '../../../common/helpers/baseEntity';
 import { ParticipantEntity } from './participant.entity';
 

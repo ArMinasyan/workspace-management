@@ -7,10 +7,10 @@ import configuration from './configuration';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersEntity } from './modules/Auth/entities/users.entity';
 import { WorkspaceEntity } from './modules/Workspaces/entities/workspace.entity';
-import { ChannelEntity } from './modules/WorkspaceChannels/entities/channel.entity';
+import { ChannelEntity } from './modules/Channels/entities/channel.entity';
 import AuthMiddleware from './common/middlewares/auth.middleware';
 import { JwtModule } from '@nestjs/jwt';
-import { ChannelModule } from './modules/WorkspaceChannels/channel.module';
+import { ChannelModule } from './modules/Channels/channel.module';
 import { ParticipantEntity } from './modules/Workspaces/entities/participant.entity';
 
 @Module({

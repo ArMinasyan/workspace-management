@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ChannelRepository } from './channel.repository';
 import responseMessage from '../../common/helpers/response-message';
 import { IResponse } from '../../common/helpers/IResponse';
+import { GetChannelsDto } from './dto/get-channels.dto';
 
 @Injectable()
 export class ChannelService {
@@ -30,11 +31,16 @@ export class ChannelService {
     });
   }
 
-  async findAll(workspaceId: number): Promise<IResponse> {
+  async findAll(
+    workspaceId: number,
+    query: GetChannelsDto,
+  ): Promise<IResponse> {
     const channels = await this.channelRepository.find({
       where: {
         workspace: workspaceId,
       },
+      take: query.limit,
+      skip: query.offset,
     });
     return responseMessage({
       data: channels,

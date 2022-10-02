@@ -7,12 +7,14 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { ChannelService } from './channel.service';
 import { CreateChannelDto } from './dto/create-channel.dto';
 import { UpdateWorkspaceDto } from './dto/update-workspace.dto';
 import { ApiBearerAuth, ApiConsumes, ApiOperation } from '@nestjs/swagger';
 import { User } from '../../common/customDecorators/user.decorator';
+import { GetChannelsDto } from './dto/get-channels.dto';
 
 @ApiBearerAuth()
 @Controller('workspaces/:workspaceId')
@@ -36,8 +38,11 @@ export class ChannelController {
     tags: ['Channels'],
   })
   @Get('channels')
-  findAll(@Param('workspaceId', ParseIntPipe) workspaceId: number) {
-    return this.channelService.findAll(workspaceId);
+  findAll(
+    @Query() query: GetChannelsDto,
+    @Param('workspaceId', ParseIntPipe) workspaceId: number,
+  ) {
+    return this.channelService.findAll(workspaceId, query);
   }
 
   @ApiOperation({
