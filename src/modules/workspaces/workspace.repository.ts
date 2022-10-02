@@ -32,7 +32,7 @@ export class WorkspaceRepository extends Repository<WorkspaceEntity> {
     return this.save({
       name,
       sub_domain: subDomain,
-      user_id: userId,
+      user: userId,
     });
   }
 }

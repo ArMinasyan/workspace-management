@@ -6,7 +6,7 @@ import { AuthRepository } from './auth.repository';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersEntity } from './entities/users.entity';
-import { FileUploadModule } from '../FileUpload/file-upload.module';
+import { FileUploadModule } from '../fileUpload/file-upload.module';
 
 @Module({
   imports: [

@@ -25,7 +25,7 @@ export class ChannelRepository extends Repository<ChannelEntity> {
     return await this.save({
       workspace: workspaceId,
       name,
-      user_id: userId,
+      user: userId,
     });
   }
 }

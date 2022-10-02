@@ -55,19 +55,27 @@ export class WorkspacesService {
   }
 
   async findAll(query: GetWorkspacesDto): Promise<IResponse> {
-    const workspaces = await this.workspaceRepository.find({
-      take: query.limit,
-      skip: query.offset,
-    });
+    const workspaces = await this.workspaceRepository
+      .createQueryBuilder('w')
+      .select(`w.*, u.email as  "created_by"`)
+      .innerJoin('users', 'u', ' w.user = u.id')
+      .offset(query.offset)
+      .limit(query.limit)
+      .getRawMany();
 
-    console.log(workspaces);
     return responseMessage({
       data: workspaces,
     });
   }
 
   async findOne(id: number): Promise<IResponse> {
-    const workspace = await this.workspaceRepository.findById(id);
+    const workspace = await this.workspaceRepository
+      .createQueryBuilder('w')
+      .select(`w.*, u.email as  "created_by"`)
+      .innerJoin('users', 'u', ' w.user = u.id')
+      .where({ id })
+      .getRawOne();
+
     return responseMessage({
       data: workspace,
     });

@@ -35,20 +35,28 @@ export class ChannelService {
     workspaceId: number,
     query: GetChannelsDto,
   ): Promise<IResponse> {
-    const channels = await this.channelRepository.find({
-      where: {
-        workspace: workspaceId,
-      },
-      take: query.limit,
-      skip: query.offset,
-    });
+    const channels = await this.channelRepository
+      .createQueryBuilder('c')
+      .select(`c.*, u.email as  "created_by"`)
+      .innerJoin('users', 'u', ' c.user = u.id')
+      .where({ workspace: workspaceId })
+      .offset(query.offset)
+      .limit(query.limit)
+      .getRawMany();
+
     return responseMessage({
       data: channels,
     });
   }
 
   async findOne(id: number): Promise<IResponse> {
-    const channel = await this.channelRepository.findById(id);
+    const channel = await this.channelRepository
+      .createQueryBuilder('c')
+      .select(`c.*, u.email as  "created_by"`)
+      .innerJoin('users', 'u', ' c.user = u.id')
+      .where({ id })
+      .getRawOne();
+
     return responseMessage({
       data: channel,
     });
