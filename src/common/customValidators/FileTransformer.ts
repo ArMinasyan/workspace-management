@@ -1,4 +1,4 @@
-import { HttpException, Injectable, PipeTransform } from '@nestjs/common';
+import { Injectable, PipeTransform } from '@nestjs/common';
 
 @Injectable()
 export class FileTransformer implements PipeTransform {
@@ -19,17 +19,8 @@ export class FileTransformer implements PipeTransform {
       }
 
       return newFiles;
-    } else {
-      throw new HttpException(
-        {
-          success: false,
-          message: 'Image is required',
-          data: {},
-          statusCode: 400,
-          validationError: {},
-        },
-        400,
-      );
     }
+
+    return newFiles;
   }
 }

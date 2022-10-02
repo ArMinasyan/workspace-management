@@ -8,7 +8,7 @@ export class SignUpDto {
   email: string;
 
   @ApiProperty()
-  @IsString()
+  @IsString({ message: validationMessages.required })
   password: string;
 
   @ApiProperty({
