@@ -7,7 +7,7 @@ import { IResponse } from '../../common/helpers/IResponse';
 import { InjectRepository } from '@nestjs/typeorm';
 import responseMessage from '../../common/helpers/response-message';
 import { SignUpDto } from './dto/sign-up.dto';
-import { FileUploadService } from '../FileUpload/file-upload.service';
+import { FileUploadService } from '../fileUpload/file-upload.service';
 
 @Injectable()
 export class AuthService {

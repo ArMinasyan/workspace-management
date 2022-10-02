@@ -5,7 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { WorkspaceEntity } from '../../Workspaces/entities/workspace.entity';
+import { WorkspaceEntity } from '../../workspaces/entities/workspace.entity';
 import { BaseEntity } from '../../../common/helpers/baseEntity';
 
 @Entity({

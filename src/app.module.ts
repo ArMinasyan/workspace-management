@@ -1,17 +1,16 @@
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
-import { AppService } from './app.service';
-import { AuthModule } from './modules/Auth/auth.module';
-import { WorkspacesModule } from './modules/Workspaces/workspaces.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { WorkspacesModule } from './modules/workspaces/workspaces.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration from './configuration';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersEntity } from './modules/Auth/entities/users.entity';
-import { WorkspaceEntity } from './modules/Workspaces/entities/workspace.entity';
-import { ChannelEntity } from './modules/Channels/entities/channel.entity';
+import { UsersEntity } from './modules/auth/entities/users.entity';
+import { WorkspaceEntity } from './modules/workspaces/entities/workspace.entity';
+import { ChannelEntity } from './modules/channels/entities/channel.entity';
 import AuthMiddleware from './common/middlewares/auth.middleware';
 import { JwtModule } from '@nestjs/jwt';
-import { ChannelModule } from './modules/Channels/channel.module';
-import { ParticipantEntity } from './modules/Workspaces/entities/participant.entity';
+import { ChannelModule } from './modules/channels/channel.module';
+import { ParticipantEntity } from './modules/workspaces/entities/participant.entity';
 
 @Module({
   imports: [
@@ -48,7 +47,6 @@ import { ParticipantEntity } from './modules/Workspaces/entities/participant.ent
       },
     }),
   ],
-  providers: [AppService],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer): any {

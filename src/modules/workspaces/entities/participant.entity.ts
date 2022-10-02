@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { BaseEntity } from '../../../common/helpers/baseEntity';
 import { WorkspaceEntity } from './workspace.entity';
-import { UsersEntity } from '../../Auth/entities/users.entity';
+import { UsersEntity } from '../../auth/entities/users.entity';
 
 @Entity({
   name: 'participants',
