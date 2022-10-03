@@ -3,6 +3,9 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpException,
+  HttpStatus,
   Param,
   Post,
   Put,
@@ -27,6 +30,7 @@ export class WorkspacesController {
     tags: ['Workspaces'],
   })
   @ApiConsumes('application/x-www-form-urlencoded')
+  @HttpCode(HttpStatus.CREATED)
   @Post()
   create(@Body() payload: CreateWorkspaceDto, @User() user) {
     return this.workspacesService.create(user.id, payload);
@@ -35,68 +39,116 @@ export class WorkspacesController {
   @ApiOperation({
     tags: ['Workspaces'],
   })
+  @HttpCode(HttpStatus.OK)
   @Get()
-  findAll(@Query() query: GetWorkspacesDto) {
-    return this.workspacesService.findAll(query);
+  async findAll(@Query() query: GetWorkspacesDto) {
+    const response = await this.workspacesService.findAll(query);
+
+    if (!response.statusCode.toString().startsWith('2')) {
+      throw new HttpException(response, response.statusCode);
+    }
+
+    return response;
   }
 
   @ApiOperation({
     tags: ['Workspaces'],
   })
+  @HttpCode(HttpStatus.OK)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.workspacesService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    const response = await this.workspacesService.findOne(+id);
+
+    if (!response.statusCode.toString().startsWith('2')) {
+      throw new HttpException(response, response.statusCode);
+    }
+
+    return response;
   }
 
   @ApiOperation({
     tags: ['Workspaces'],
   })
+  @HttpCode(HttpStatus.OK)
   @Get(':id/participants')
-  findAllParticipants(
+  async findAllParticipants(
     @Query() query: GetParticipantsDto,
     @Param('id') id: number,
   ) {
-    return this.workspacesService.getAllParticipants(id, query);
+    const response = await this.workspacesService.getAllParticipants(id, query);
+    if (!response.statusCode.toString().startsWith('2')) {
+      throw new HttpException(response, response.statusCode);
+    }
+    return response;
   }
 
   @ApiOperation({
     tags: ['Workspaces'],
   })
   @ApiConsumes('application/x-www-form-urlencoded')
+  @HttpCode(HttpStatus.CREATED)
   @Post('join')
-  joinToWorkspace(@Body() payload: JoinToWorkspaceDto, @User() user: any) {
-    return this.workspacesService.joinToWorkspace({
+  async joinToWorkspace(
+    @Body() payload: JoinToWorkspaceDto,
+    @User() user: any,
+  ) {
+    const response = await this.workspacesService.joinToWorkspace({
       ...payload,
       userId: user.id,
     });
+    if (!response.statusCode.toString().startsWith('2')) {
+      throw new HttpException(response, response.statusCode);
+    }
+    return response;
   }
 
   @ApiOperation({
     tags: ['Workspaces'],
   })
   @ApiConsumes('application/x-www-form-urlencoded')
+  @HttpCode(HttpStatus.CREATED)
   @Post('invite')
-  inviteToWorkspace(@Body() payload: InviteToWorkspaceDto, @User() user: any) {
-    return this.workspacesService.inviteToWorkspace({
+  async inviteToWorkspace(
+    @Body() payload: InviteToWorkspaceDto,
+    @User() user: any,
+  ) {
+    const response = await this.workspacesService.inviteToWorkspace({
       ...payload,
       inviterId: user.id,
     });
+    if (!response.statusCode.toString().startsWith('2')) {
+      throw new HttpException(response, response.statusCode);
+    }
+
+    return response;
   }
 
   @ApiOperation({
     tags: ['Workspaces'],
   })
   @ApiConsumes('application/x-www-form-urlencoded')
+  @HttpCode(HttpStatus.OK)
   @Put(':id')
-  update(@Param('id') id: string, @Body() payload: UpdateWorkspaceDto) {
-    return this.workspacesService.update(+id, payload);
+  async update(@Param('id') id: string, @Body() payload: UpdateWorkspaceDto) {
+    const response = await this.workspacesService.update(+id, payload);
+    if (!response.statusCode.toString().startsWith('2')) {
+      throw new HttpException(response, response.statusCode);
+    }
+
+    return response;
   }
 
   @ApiOperation({
     tags: ['Workspaces'],
   })
+  @HttpCode(HttpStatus.OK)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.workspacesService.remove(+id);
+  async remove(@Param('id') id: string) {
+    const response = await this.workspacesService.remove(+id);
+    if (!response.statusCode.toString().startsWith('2')) {
+      throw new HttpException(response, response.statusCode);
+    }
+
+    return response;
   }
 }

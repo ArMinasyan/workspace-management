@@ -3,6 +3,9 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpException,
+  HttpStatus,
   Param,
   ParseIntPipe,
   Post,
@@ -25,48 +28,83 @@ export class ChannelController {
     tags: ['Channels'],
   })
   @ApiConsumes('application/x-www-form-urlencoded')
+  @HttpCode(HttpStatus.CREATED)
   @Post('channels')
-  create(
+  async create(
     @Param('workspaceId') workspaceId: number,
     @User() user,
     @Body() payload: CreateChannelDto,
   ) {
-    return this.channelService.create(workspaceId, user.id, payload);
+    const response = await this.channelService.create(
+      workspaceId,
+      user.id,
+      payload,
+    );
+
+    if (!response.statusCode.toString().startsWith('2')) {
+      throw new HttpException(response, response.statusCode);
+    }
+
+    return response;
   }
 
   @ApiOperation({
     tags: ['Channels'],
   })
+  @HttpCode(HttpStatus.OK)
   @Get('channels')
-  findAll(
+  async findAll(
     @Query() query: GetChannelsDto,
     @Param('workspaceId', ParseIntPipe) workspaceId: number,
   ) {
-    return this.channelService.findAll(workspaceId, query);
+    const response = await this.channelService.findAll(workspaceId, query);
+    if (!response.statusCode.toString().startsWith('2')) {
+      throw new HttpException(response, response.statusCode);
+    }
+
+    return response;
   }
 
   @ApiOperation({
     tags: ['Channels'],
   })
+  @HttpCode(HttpStatus.OK)
   @Get('channels/:id')
-  findOne(@Param('id') id: string) {
-    return this.channelService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    const response = await this.channelService.findOne(+id);
+    if (!response.statusCode.toString().startsWith('2')) {
+      throw new HttpException(response, response.statusCode);
+    }
+
+    return response;
   }
 
   @ApiOperation({
     tags: ['Channels'],
   })
   @ApiConsumes('application/x-www-form-urlencoded')
+  @HttpCode(HttpStatus.OK)
   @Put(':id')
-  update(@Param('id') id: string, @Body() payload: UpdateWorkspaceDto) {
-    return this.channelService.update(+id, payload);
+  async update(@Param('id') id: string, @Body() payload: UpdateWorkspaceDto) {
+    const response = await this.channelService.update(+id, payload);
+    if (!response.statusCode.toString().startsWith('2')) {
+      throw new HttpException(response, response.statusCode);
+    }
+
+    return response;
   }
 
   @ApiOperation({
     tags: ['Channels'],
   })
+  @HttpCode(HttpStatus.OK)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.channelService.remove(+id);
+  async remove(@Param('id') id: string) {
+    const response = await this.channelService.remove(+id);
+    if (!response.statusCode.toString().startsWith('2')) {
+      throw new HttpException(response, response.statusCode);
+    }
+
+    return response;
   }
 }

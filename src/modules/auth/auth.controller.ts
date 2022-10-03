@@ -1,6 +1,9 @@
 import {
   Body,
   Controller,
+  HttpCode,
+  HttpException,
+  HttpStatus,
   Post,
   UploadedFile,
   UseInterceptors,
@@ -20,18 +23,33 @@ export class AuthController {
     tags: ['Auth'],
   })
   @ApiConsumes('application/x-www-form-urlencoded')
+  @HttpCode(HttpStatus.CREATED)
   @Post('sign-in')
-  signIn(@Body() payload: SignInDto) {
-    return this.authService.signIn(payload);
+  async signIn(@Body() payload: SignInDto) {
+    const response = await this.authService.signIn(payload);
+    if (!response.statusCode.toString().startsWith('2')) {
+      throw new HttpException(response, response.statusCode);
+    }
+
+    return response;
   }
 
   @ApiOperation({
     tags: ['Auth'],
   })
   @ApiConsumes('multipart/form-data')
+  @HttpCode(HttpStatus.CREATED)
   @Post('sign-up')
   @UseInterceptors(FileInterceptor('image'))
-  signUp(@Body() payload: SignUpDto, @UploadedFile(FileTransformer) file) {
-    return this.authService.signUp(payload, file);
+  async signUp(
+    @Body() payload: SignUpDto,
+    @UploadedFile(FileTransformer) file,
+  ) {
+    const response = await this.authService.signUp(payload, file);
+    if (!response.statusCode.toString().startsWith('2')) {
+      throw new HttpException(response, response.statusCode);
+    }
+
+    return response;
   }
 }
